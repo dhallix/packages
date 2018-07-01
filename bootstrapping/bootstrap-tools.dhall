@@ -36,7 +36,7 @@
               , nix-dhall.DerivationArguments.Derivation unpack-bootstrap-tools
               ]
           , builder =
-              nix-dhall.Builders.Derivation busybox
+              nix-dhall.Builders.Derivation { derivation = busybox, bin = \ (out : Text) -> out }
           , name =
               "bootstrap-tools"
           , system =
