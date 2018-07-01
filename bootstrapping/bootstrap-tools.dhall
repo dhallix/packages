@@ -1,9 +1,7 @@
 
-  λ ( busybox
-    : https://raw.githubusercontent.com/nix-dhall/nix-dhall/master/dhall/Nix/types/Derivation.dhall
-    )
+  λ(busybox : ./../dhall/Derivation.dhall)
 →     let nix-dhall =
-            https://raw.githubusercontent.com/nix-dhall/nix-dhall/master/dhall/package.dhall
+            ./../dhall/nix-dhall.dhall
   
   in  let bootstrap-tools =
             nix-dhall.fetchurl
@@ -36,7 +34,8 @@
               , nix-dhall.DerivationArguments.Derivation unpack-bootstrap-tools
               ]
           , builder =
-              nix-dhall.Builders.Derivation { derivation = busybox, bin = \ (out : Text) -> out }
+              nix-dhall.Builders.Derivation
+              { derivation = busybox, bin = λ(out : Text) → out }
           , name =
               "bootstrap-tools"
           , system =

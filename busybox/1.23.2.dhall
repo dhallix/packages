@@ -1,5 +1,4 @@
-    let nix-dhall =
-          https://raw.githubusercontent.com/nix-dhall/nix-dhall/master/dhall/package.dhall
+    let nix-dhall = ./../dhall/nix-dhall.dhall
 
 in  nix-dhall.fetchurl
     { name =
