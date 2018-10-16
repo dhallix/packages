@@ -1,13 +1,14 @@
-    let Derivation = ./../../dhall/Nix/types/Derivation.dhall
+    let Derivation = ./../../dhall/Nix/types/Derivation.dhall 
 
-in  let nix-dhall = ./../../dhall/package.dhall
+in  let nix-dhall = ./../../dhall/package.dhall 
 
-in    λ(args : { busybox : Derivation, name : Text, source : Text })
+in    λ(support : { busybox : Derivation })
+    → λ(args : { name : Text, source : Text })
     → nix-dhall.derivation
       (   nix-dhall.defaults.DerivationArgs
         ⫽ { builder =
               nix-dhall.Builders.Derivation
-              { derivation = args.busybox, bin = λ(out : Text) → out }
+              { derivation = support.busybox, bin = λ(out : Text) → out }
           , system =
               nix-dhall.Systems.x86_64-linux {=}
           , name =

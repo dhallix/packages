@@ -1,9 +1,28 @@
-    let busybox = ./busybox/1.23.2.dhall
+    let busybox = ./busybox/1.23.2.dhall 
 
-in  let write-file =
-            λ(args : { name : Text, source : Text })
-          → ./utils/write-file.dhall (args ⫽ { busybox = busybox })
+in  let bootstrap-tools = ./bootstrapping/bootstrap-tools.dhall  busybox
 
-in  let bash = ./Bash/4.4.dhall write-file busybox
+in  let run-script =
+          ./run-script.dhall 
+          { busybox =
+              busybox
+          , write-file =
+              ./utils/write-file.dhall  { busybox = busybox }
+          }
 
-in  { busybox = busybox, bash = bash }
+in  ./Bash/build.dhall 
+    { source =
+        ./Bash/4.4.dhall 
+        { download =
+            ./download.dhall 
+        , unpack =
+            ./unpack.dhall 
+            { bootstrap = bootstrap-tools, run-script = run-script }
+        , subpath =
+            ./subpath.dhall 
+            { bootstrap = bootstrap-tools, run-script = run-script }
+        }
+    , auto-tools =
+        ./auto-tools.dhall 
+        { run-script = run-script, bootstrap = bootstrap-tools }
+    }
